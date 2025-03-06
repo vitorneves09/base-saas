@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+    lara-mysql:
+        image: mysql:8.0
+        container_name: lara-mysql
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: meu_banco
+            MYSQL_USER: meu_usuario
+            MYSQL_PASSWORD: minha_senha
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        networks:
+            - minha_rede
+
+volumes:
+    mysql_data:
+
+networks:
+    minha_rede:
+        driver: bridge
