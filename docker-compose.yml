@@ -7,7 +7,7 @@ services:
         restart: always
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: meu_banco
+            MYSQL_DATABASE: base_saas_25
             MYSQL_USER: meu_usuario
             MYSQL_PASSWORD: minha_senha
         ports:
