@@ -54,6 +54,12 @@ class AppServiceProvider extends ServiceProvider
          * @psalm-suppress UndefinedMethod
          */
         Model::shouldBeStrict();
+
+        // Prevent lazy loading in non-production environments
+        // Helping us detect n+1 queries before deploying
+        Model::preventLazyLoading(
+            !app()->isProduction()
+        );
     }
 
     private function configCommand(): void
