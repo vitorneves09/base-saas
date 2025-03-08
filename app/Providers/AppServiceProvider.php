@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Override;
@@ -25,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->setupLogViewer();
+        $this->configModel();
     }
 
     private function setupLogViewer(): void
@@ -32,5 +34,23 @@ class AppServiceProvider extends ServiceProvider
         LogViewer::auth( function ($request) {
             return $request->user()?->is_admin;
         });
+    }
+
+   /**
+     * Configures the Eloquent model settings.
+     *
+     * This method sets the Eloquent model to strict mode, which enforces stricter
+     * handling of attributes and relationships. The `@psalm-suppress` annotation
+     * is used to suppress the `UndefinedMethod` warning from Psalm static analysis
+     * tool, as the `shouldBeStrict` method might not be recognized by it.
+     *
+     * @return void
+     */
+    private function configModel(): void
+    {
+        /**
+         * @psalm-suppress UndefinedMethod
+         */
+        Model::shouldBeStrict();
     }
 }
