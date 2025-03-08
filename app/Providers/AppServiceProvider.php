@@ -4,8 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Override;
@@ -29,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         $this->setupLogViewer();
         $this->configModel();
         $this->configCommand();
+        $this->confiUrls();
+        $this->configDate();
     }
 
     private function setupLogViewer(): void
@@ -54,7 +59,6 @@ class AppServiceProvider extends ServiceProvider
          * @psalm-suppress UndefinedMethod
          */
         Model::shouldBeStrict();
-
         // Prevent lazy loading in non-production environments
         // Helping us detect n+1 queries before deploying
         Model::preventLazyLoading(
@@ -65,5 +69,24 @@ class AppServiceProvider extends ServiceProvider
     private function configCommand(): void
     {
        DB::prohibitDestructiveCommands(app()->isProduction());
+    }
+
+    private function confiUrls(): void
+    {
+        URL::forceHttps();
+    }
+
+    /**
+     * Configures the date settings.
+     *
+     * This method sets the date class to use the `CarbonImmutable` class, which
+     * returns immutable instances of Carbon. This ensures that the date and time
+     * values are not accidentally modified.
+     *
+     * @return void
+     */
+    private function configDate()
+    {
+        Date::use(CarbonImmutable::class);
     }
 }
