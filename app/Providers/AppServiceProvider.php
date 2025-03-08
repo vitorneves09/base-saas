@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 use Override;
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->setupLogViewer();
         $this->configModel();
+        $this->configCommand();
     }
 
     private function setupLogViewer(): void
@@ -52,5 +54,10 @@ class AppServiceProvider extends ServiceProvider
          * @psalm-suppress UndefinedMethod
          */
         Model::shouldBeStrict();
+    }
+
+    private function configCommand(): void
+    {
+       DB::prohibitDestructiveCommands(app()->isProduction());
     }
 }
